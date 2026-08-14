@@ -1,5 +1,4 @@
-﻿# Build
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 WORKDIR /src
 
@@ -14,14 +13,15 @@ RUN dotnet publish "signalR_server.csproj" \
     /p:UseAppHost=false
 
 
-# Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 
 WORKDIR /app
 
 COPY --from=build /app/publish .
 
+ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_URLS=http://+:10000
+ENV DOTNET_USE_POLLING_FILE_WATCHER=1
 
 EXPOSE 10000
 
